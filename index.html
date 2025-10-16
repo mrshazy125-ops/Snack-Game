@@ -8,8 +8,18 @@
 </head>
 <body>
   <h1>🐍 Snake Game</h1>
-  <canvas id="gameCanvas" width="400" height="400"></canvas>
   <p id="score">Score: 0</p>
+  
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  
+  <div class="controls">
+    <button id="startBtn">▶️ Start Game</button>
+    <button id="restartBtn" style="display:none;">🔄 Restart</button>
+  </div>
+
+  <audio id="eatSound" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+  <audio id="gameOverSound" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+
   <script src="script.js"></script>
 </body>
 </html>

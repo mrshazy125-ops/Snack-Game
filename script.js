@@ -1,25 +1,23 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const box = 20; // grid size
+const scoreDisplay = document.getElementById("score");
+const startBtn = document.getElementById("startBtn");
+const restartBtn = document.getElementById("restartBtn");
+const eatSound = document.getElementById("eatSound");
+const gameOverSound = document.getElementById("gameOverSound");
 
-let snake = [];
-snake[0] = { x: 9 * box, y: 10 * box };
+const box = 20;
+let snake, food, score, direction, game;
 
-let food = {
-  x: Math.floor(Math.random() * 19) * box,
-  y: Math.floor(Math.random() * 19) * box
-};
-
-let score = 0;
-let direction;
-
-document.addEventListener("keydown", directionControl);
-
-function directionControl(e) {
-  if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-  else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-  else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-  else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+function initGame() {
+  snake = [{ x: 9 * box, y: 10 * box }];
+  food = {
+    x: Math.floor(Math.random() * 19) * box,
+    y: Math.floor(Math.random() * 19) * box,
+  };
+  score = 0;
+  direction = null;
+  scoreDisplay.textContent = "Score: 0";
 }
 
 function drawGame() {
@@ -31,56 +29,73 @@ function drawGame() {
 
   // Draw snake
   for (let i = 0; i < snake.length; i++) {
-    ctx.fillStyle = i === 0 ? "lime" : "green";
+    ctx.fillStyle = i === 0 ? "#00ff99" : "#00cc77";
     ctx.fillRect(snake[i].x, snake[i].y, box, box);
   }
 
   // Move snake
-  let snakeX = snake[0].x;
-  let snakeY = snake[0].y;
+  let headX = snake[0].x;
+  let headY = snake[0].y;
 
-  if (direction === "LEFT") snakeX -= box;
-  if (direction === "UP") snakeY -= box;
-  if (direction === "RIGHT") snakeX += box;
-  if (direction === "DOWN") snakeY += box;
+  if (direction === "LEFT") headX -= box;
+  if (direction === "UP") headY -= box;
+  if (direction === "RIGHT") headX += box;
+  if (direction === "DOWN") headY += box;
 
   // Check food collision
-  if (snakeX === food.x && snakeY === food.y) {
+  if (headX === food.x && headY === food.y) {
+    eatSound.play();
     score++;
-    document.getElementById("score").textContent = "Score: " + score;
+    scoreDisplay.textContent = "Score: " + score;
     food = {
       x: Math.floor(Math.random() * 19) * box,
-      y: Math.floor(Math.random() * 19) * box
+      y: Math.floor(Math.random() * 19) * box,
     };
   } else {
     snake.pop();
   }
 
-  // Add new head
-  let newHead = { x: snakeX, y: snakeY };
+  const newHead = { x: headX, y: headY };
 
-  // Game Over conditions
+  // Check collisions
   if (
-    snakeX < 0 ||
-    snakeY < 0 ||
-    snakeX >= 500 ||
-    snakeY >= 500 ||
+    headX < 0 ||
+    headY < 0 ||
+    headX >= 400 ||
+    headY >= 400 ||
     collision(newHead, snake)
   ) {
+    gameOverSound.play();
     clearInterval(game);
-    alert("Game Over! Final Score: " + score);
+    alert("💀 Game Over! Final Score: " + score);
+    restartBtn.style.display = "inline-block";
+    return;
   }
 
   snake.unshift(newHead);
 }
 
 function collision(head, array) {
-  for (let i = 0; i < array.length; i++) {
-    if (head.x === array[i].x && head.y === array[i].y) {
-      return true;
-    }
-  }
-  return false;
+  return array.some(seg => seg.x === head.x && seg.y === head.y);
 }
 
-let game = setInterval(drawGame, 100);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+  if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+  if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+  if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+});
+
+startBtn.addEventListener("click", () => {
+  initGame();
+  startBtn.style.display = "none";
+  restartBtn.style.display = "none";
+  game = setInterval(drawGame, 100);
+});
+
+restartBtn.addEventListener("click", () => {
+  initGame();
+  restartBtn.style.display = "none";
+  game = setInterval(drawGame, 100);
+});
+initGame();

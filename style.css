@@ -7,15 +7,36 @@ body {
 
 h1 {
   margin-top: 20px;
-}
-
-canvas {
-  background-color: #222;
-  border: 3px solid #0f0;
-  margin-top: 20px;
+  color: #00ff99;
 }
 
 #score {
   font-size: 22px;
+  margin: 10px;
+}
+
+canvas {
+  background-color: #222;
+  border: 3px solid #00ff99;
   margin-top: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #00ff99;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+button {
+  background-color: #00ff99;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #00cc77;
 }

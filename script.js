@@ -6,14 +6,14 @@ const restartBtn = document.getElementById("restartBtn");
 const eatSound = document.getElementById("eatSound");
 const gameOverSound = document.getElementById("gameOverSound");
 
-const box = 20;
+const box = 15;
 let snake, food, score, direction, game;
 
 function initGame() {
-  snake = [{ x: 9 * box, y: 10 * box }];
+  snake = [{ x: 7 * box, y: 7 * box }];
   food = {
-    x: Math.floor(Math.random() * 19) * box,
-    y: Math.floor(Math.random() * 19) * box,
+    x: Math.floor(Math.random() * 15) * box,
+    y: Math.floor(Math.random() * 15) * box,
   };
   score = 0;
   direction = null;
